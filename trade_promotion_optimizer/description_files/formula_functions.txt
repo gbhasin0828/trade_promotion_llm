@@ -1,0 +1,19 @@
+{
+  "Retailer_Margin_%": "lambda Base_Price, Actual_Price, List_Price, Base_Trade_$_Unit, Var_Trade_$_Unit, Week_Type: (Base_Price - List_Price + Base_Trade_$_Unit) / Base_Price if Week_Type == 'Base' else (Actual_Price - List_Price + Base_Trade_$_Unit + Var_Trade_$_Unit) / Actual_Price",
+  
+  "$$_Trade_Unit": "lambda Base_Trade_$_Unit, Var_Trade_$_Unit, Week_Type: Base_Trade_$_Unit if Week_Type == 'Base' else Base_Trade_$_Unit + Var_Trade_$_Unit",
+  
+  "%_Trade_Rate": "lambda $_Trade_Unit, List_Price: $_Trade_Unit / List_Price",
+  
+  "Profit_Unit": "lambda List_Price, COGS_Unit, Base_Trade_$_Unit, Var_$_Trade_Unit, Week_Type: List_Price - COGS_Unit - Base_Trade_$_Unit if Week_Type == 'Base' else List_Price - COGS_Unit - (Base_Trade_$_Unit + Var_$_Trade_Unit)",
+  
+  "Profit_Unit_Percentage": "lambda Profit_Unit, List_Price: Profit_Unit / List_Price",
+  
+  "Lift_%": "lambda Promo_Units, Base_Units, Week_Type: (Promo_Units - Base_Units) / Base_Units if Week_Type == 'Promo' else 0",
+  
+  "Inc_Profit": "lambda Promo_Units, Base_Units, List_Price, COGS_Unit, Base_Trade_$_Unit, Var_$_Trade_Unit: (Promo_Units * (List_Price - COGS_Unit - Base_Trade_$_Unit - Var_$_Trade_Unit)) - (Base_Units * (List_Price - COGS_Unit - Base_Trade_$_Unit)) if Promo_Units > 0 else 0",
+  
+  "ROI": "lambda Inc_Profit, Var_$_Trade_Unit, Promo_Units: Inc_Profit / (Promo_Units * Var_$_Trade_Unit) if Var_$_Trade_Unit > 0 else 0",
+  
+  "Discount": "lambda Base_Price, Actual_Price: (Base_Price - Actual_Price) / Base_Price * 100 if Base_Price > 0 else 0"
+}

@@ -1,0 +1,22 @@
+{
+  "Discount": ["discount", "price discount", "percentage off", "discounted price"],
+  "Customer": ["customer", "retailer", "store, banner"],
+  "Week_Type": ["week type", "promotion week", "non-promotion week"],
+  "Merch": ["merch", "promotion method", "promotion type, Merchandizing", "Merchandizing strategy"],
+  "Item": ["item", "product", "product name"],
+  "Lift_%": ["unit lift", "percentage lift", "lift in units", "% lift", "sales lift"],
+  "Margin_%": ["margin", "retailer margin", "retail margin", "customer margin"],
+  "Min_Margin_%": ["min margin", "minimum margin", "minimum retail margin"],
+  "Trade_Unit": ["trade per unit", "allowance per unit", "total allowance", "trade allowance"],
+  "Trade_Rate": ["trade rate", "rate of trade", "% trade investment"],
+  "Profit_Unit": ["profit per unit", "unit profit", "profit per item"],
+  "%_Profit_Unit": ["profit percentage", "unit profit percentage", "% profit per unit"],
+  "Inc_Profit": ["incremental profit", "added profit", "promo profit", "incremental sales profit"],
+  "%_ROI": ["roi", "return on investment", "promo roi", "return on trade investment"],
+  "Base_Retailer_Margin_Unit": ["base retailer margin per unit", "base retailer margin per item"],
+  "Retailer_Margin_Unit": ["retailer margin per unit", "retailer margin per item"],
+  "Predicted_Units": ["Units", "Total Units"],
+  "Predicted_Base_Units": ["Base Units, Total Base Units"],
+  "Predicted_Base_Sales": ["Base Sales, Total Base Sales, Dollar Base Sales"],
+  "Predicted_Sales": ["Sales, Total Sales, Dollar Sales"]
+}

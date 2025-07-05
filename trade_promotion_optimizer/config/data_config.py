@@ -111,7 +111,8 @@ class DataSchema:
     # ML PREDICTED COLUMNS
     # =============================================================================
     ml_predicted_cols: List[str] = field(default_factory=lambda: [
-        "Base_Units"                # Units that would be sold in base week
+        "Base_Units",                # Units that would be sold in base week
+        "Units"
     ])
     
     # =============================================================================
@@ -149,7 +150,6 @@ class DataSchema:
     # REQUIRED COLUMNS (Must be present in input data)
     # =============================================================================
     required_cols: List[str] = field(default_factory=lambda: [
-        "Units",              # Must have actual sales volume
         "Base_Price",         # Must have regular price
         "Actual_Price",       # Must have actual selling price
         "Customer",           # Must know which retailer
@@ -159,7 +159,6 @@ class DataSchema:
         "Merch",              # Must know merchandising support
         "List_Price",         # Must have manufacturer price
         "COGS_Unit",          # Must have cost information
-        "Retailer_Margin_%"   # Must have retailer margin
     ])
     
     # =============================================================================

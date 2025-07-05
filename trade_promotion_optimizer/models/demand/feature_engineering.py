@@ -85,24 +85,22 @@ class ScenarioFeatureEngineer:
 
     
     def fit(self, df: pd.DataFrame):
-        """
-        EXPLANATION: Fit encoders on historical data.
-        
-        This learns the mapping between categorical values and encoded numbers.
-        Must be called once on historical data before making predictions.
-        """
+        """Fit all encoders and scalers on historical data."""
         logger.info(f"Fitting feature engineer on {len(df)} historical records")
         
-        features = []
+        # Fit categorical encoders
+        self.customer_encoder.fit(df['Customer'].astype(str))
+        self.item_encoder.fit(df['Item'].astype(str))
+        self.week_type_encoder.fit(df['Week_Type'].astype(str))
+        self.promo_type_encoder.fit(df['Promo_Type'].astype(str))
+        self.merch_encoder.fit(df['Merch'].astype(str))
         
-        # Fit scaler on numerical features
+        # Extract and fit numerical features
         numerical_features = self._extract_numerical_features(df)
-
-
-
-        features.append(self.scaler.fit_transform(numerical_features))
-
-        return features
+        self.scaler.fit(numerical_features)
+        
+        logger.info("Feature engineer fitting completed")
+        return self
 
 
     def _extract_numerical_features(self, df : pd.DataFrame ) -> np.ndarray:
