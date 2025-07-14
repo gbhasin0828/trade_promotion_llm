@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade Promotion AI Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e1e5e9;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab:hover {
+            color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Natural Language Query Section */
+        .query-section {
+            margin-bottom: 30px;
+        }
+
+        .query-section label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .query-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1em;
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .query-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .examples {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .examples h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .example-item {
+            margin: 8px 0;
+            padding: 8px;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-size: 0.9em;
+        }
+
+        .example-item:hover {
+            background: #e3f2fd;
+        }
+
+        /* ML Model Direct Input Section */
+        .ml-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f0f7ff;
+            border-radius: 15px;
+            border: 2px solid #e3f2fd;
+        }
+
+        .ml-section h3 {
+            color: #1976d2;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .ml-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 0.9em;
+        }
+
+        .ml-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9em;
+            transition: border-color 0.3s ease;
+        }
+
+        .ml-input:focus {
+            outline: none;
+            border-color: #1976d2;
+            box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+        }
+
+        /* Buttons */
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #e1e5e9;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .btn-ml {
+            background: #1976d2;
+            color: white;
+        }
+
+        .btn-ml:hover {
+            background: #1565c0;
+            transform: translateY(-2px);
+        }
+
+        /* Results Section */
+        .results-section {
+            border-top: 2px solid #e1e5e9;
+            padding-top: 30px;
+            display: none;
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        .result-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .result-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .confidence-badge {
+            background: #28a745;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .result-content {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+            color: #721c24;
+        }
+
+        .status-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            z-index: 1000;
+            font-size: 0.9em;
+        }
+
+        .status-online {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-offline {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .ml-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                flex: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Trade Promotion AI</h1>
+            <p>Intelligent promotion optimization and analysis powered by machine learning</p>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('nlp')">💬 Natural Language Query</button>
+            <button class="tab" onclick="switchTab('ml')">🤖 Direct ML Prediction</button>
+        </div>
+
+        <!-- Natural Language Query Tab -->
+        <div id="nlpTab" class="tab-content active">
+            <div class="query-section">
+                <label for="userQuery">Enter your trade promotion query:</label>
+                <textarea 
+                    id="userQuery" 
+                    class="query-input" 
+                    placeholder="e.g., I have $3MM to invest at Walmart across products A, B & C over 4 weeks. Maximum 30% discount and promote maximum 2 weeks."
+                ></textarea>
+                
+                <div class="examples">
+                    <h4>📝 Example Queries:</h4>
+                    <div class="example-item" onclick="setExample(this)">
+                        I have $3MM to invest at retailer Walmart across products A, B & C over 4 weeks. I cannot go beyond 30% discount and can promote maximum 2 weeks.
+                    </div>
+                    <div class="example-item" onclick="setExample(this)">
+                        Show me the best promotions for Product A at Target based on historical performance.
+                    </div>
+                    <div class="example-item" onclick="setExample(this)">
+                        What if I reduce my trade rate from 20% to 18% at Kroger? How much volume will I lose?
+                    </div>
+                    <div class="example-item" onclick="setExample(this)">
+                        Optimize my promotion spend to maximize profit across all retailers.
+                    </div>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="btn btn-primary" onclick="processQuery()">
+                    🚀 Analyze Query
+                </button>
+                <button class="btn btn-secondary" onclick="clearResults()">
+                    🗑️ Clear
+                </button>
+            </div>
+        </div>
+
+        <!-- ML Model Direct Input Tab -->
+        <div id="mlTab" class="tab-content">
+            <div class="ml-section">
+                <h3>🤖 Direct ML Model Prediction</h3>
+                <p style="text-align: center; color: #666; margin-bottom: 25px;">Input promotion parameters to get instant predictions</p>
+                
+                <div class="ml-inputs">
+                    <div class="input-group">
+                        <label>Product/Item</label>
+                        <input type="text" id="mlProduct" class="ml-input" placeholder="Product_A" list="productDatalist">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Customer/Retailer</label>
+                        <select id="mlCustomer" class="ml-input">
+                            <option value="">Loading customers...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Week Type</label>
+                        <select id="mlWeekType" class="ml-input">
+                            <option value="">Loading...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Promo Type</label>
+                        <select id="mlPromoType" class="ml-input">
+                            <option value="">Loading...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Merchandising</label>
+                        <select id="mlMerch" class="ml-input">
+                            <option value="">Loading...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Base Price ($)</label>
+                        <input type="number" id="mlBasePrice" class="ml-input" placeholder="3.99" step="0.01" min="0">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Actual Price ($)</label>
+                        <input type="number" id="mlActualPrice" class="ml-input" placeholder="2.99" step="0.01" min="0">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>List Price ($)</label>
+                        <input type="number" id="mlListPrice" class="ml-input" placeholder="3.49" step="0.01" min="0">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>COGS per Unit ($)</label>
+                        <input type="number" id="mlCOGS" class="ml-input" placeholder="1.75" step="0.01" min="0">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Retailer Margin (%)</label>
+                        <input type="number" id="mlMargin" class="ml-input" placeholder="25" step="0.1" min="0" max="100">
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button class="btn btn-ml" onclick="predictML()">
+                        🔮 Predict Units & Lift
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearMLInputs()">
+                        🗑️ Clear Inputs
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="results-section">
+            <!-- Results will be populated here -->
+        </div>
+    </div>
+
+    <!-- Status indicator -->
+    <div id="statusIndicator" class="status-indicator status-offline">
+        🔴 Connecting...
+    </div>
+
+    <script>
+        // API Configuration
+        const API_BASE_URL = 'http://localhost:8000';
+        
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            if (tabName === 'nlp') {
+                document.getElementById('nlpTab').classList.add('active');
+                document.querySelector('.tab:first-child').classList.add('active');
+            } else if (tabName === 'ml') {
+                document.getElementById('mlTab').classList.add('active');
+                document.querySelector('.tab:last-child').classList.add('active');
+            }
+            
+            // Clear results when switching tabs
+            clearResults();
+        }
+        
+        // Check API health and load dropdown data on page load
+        window.onload = function() {
+            checkAPIHealth();
+            loadDropdownData();
+        };
+
+        function checkAPIHealth() {
+            fetch(`${API_BASE_URL}/health`)
+                .then(response => response.json())
+                .then(data => {
+                    updateStatus(true);
+                })
+                .catch(error => {
+                    updateStatus(false);
+                });
+        }
+
+        function updateStatus(isOnline) {
+            const indicator = document.getElementById('statusIndicator');
+            if (isOnline) {
+                indicator.textContent = '🟢 AI System Online';
+                indicator.className = 'status-indicator status-online';
+            } else {
+                indicator.textContent = '🔴 AI System Offline';
+                indicator.className = 'status-indicator status-offline';
+            }
+        }
+
+        async function loadDropdownData() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/data/options`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    populateDropdowns(data.result);
+                } else {
+                    console.error('Failed to load dropdown data');
+                    setDefaultDropdownValues();
+                }
+            } catch (error) {
+                console.error('Error loading dropdown data:', error);
+                setDefaultDropdownValues();
+            }
+        }
+
+        function populateDropdowns(data) {
+            // Populate Customer dropdown
+            const customerSelect = document.getElementById('mlCustomer');
+            customerSelect.innerHTML = '<option value="">Select Customer</option>';
+            data.customers.forEach(customer => {
+                const option = document.createElement('option');
+                option.value = customer;
+                option.textContent = customer;
+                customerSelect.appendChild(option);
+            });
+            
+            // Populate Week Type dropdown
+            const weekTypeSelect = document.getElementById('mlWeekType');
+            weekTypeSelect.innerHTML = '<option value="">Select Week Type</option>';
+            data.week_types.forEach(weekType => {
+                const option = document.createElement('option');
+                option.value = weekType;
+                option.textContent = weekType;
+                weekTypeSelect.appendChild(option);
+            });
+            
+            // Populate Promo Type dropdown
+            const promoTypeSelect = document.getElementById('mlPromoType');
+            promoTypeSelect.innerHTML = '<option value="">Select Promo Type</option>';
+            data.promo_types.forEach(promoType => {
+                const option = document.createElement('option');
+                option.value = promoType;
+                option.textContent = promoType;
+                promoTypeSelect.appendChild(option);
+            });
+            
+            // Populate Merchandising dropdown
+            const merchSelect = document.getElementById('mlMerch');
+            merchSelect.innerHTML = '<option value="">Select Merchandising</option>';
+            data.merch_types.forEach(merch => {
+                const option = document.createElement('option');
+                option.value = merch;
+                option.textContent = merch.replace(/_/g, ' & '); // Make it more readable
+                merchSelect.appendChild(option);
+            });
+
+            // Add product suggestions (if available)
+            if (data.products && data.products.length > 0) {
+                const productInput = document.getElementById('mlProduct');
+                productInput.placeholder = `e.g., ${data.products.slice(0, 3).join(', ')}`;
+                
+                // Add datalist for autocomplete
+                let datalist = document.getElementById('productDatalist');
+                if (!datalist) {
+                    datalist = document.createElement('datalist');
+                    datalist.id = 'productDatalist';
+                    document.body.appendChild(datalist);
+                }
+                
+                data.products.forEach(product => {
+                    const option = document.createElement('option');
+                    option.value = product;
+                    datalist.appendChild(option);
+                });
+            }
+        }
+
+        function setDefaultDropdownValues() {
+            // Fallback values if API fails
+            const defaults = {
+                customers: ['Walmart', 'Target', 'Kroger'],
+                week_types: ['Promo', 'Base'],
+                promo_types: ['Single', 'Multiple', 'No_Promo'],
+                merch_types: ['ISF_&_Flyer', 'ISF_Only', 'No_Promo']
+            };
+            
+            populateDropdowns(defaults);
+        }
+
+        function setExample(element) {
+            document.getElementById('userQuery').value = element.textContent.trim();
+        }
+
+        function clearResults() {
+            document.getElementById('userQuery').value = '';
+            document.getElementById('resultsSection').classList.remove('show');
+            document.getElementById('resultsSection').innerHTML = '';
+        }
+
+        function clearMLInputs() {
+            document.getElementById('mlProduct').value = '';
+            document.getElementById('mlCustomer').selectedIndex = 0;
+            document.getElementById('mlWeekType').selectedIndex = 0;
+            document.getElementById('mlPromoType').selectedIndex = 0;
+            document.getElementById('mlMerch').selectedIndex = 0;
+            document.getElementById('mlBasePrice').value = '';
+            document.getElementById('mlActualPrice').value = '';
+            document.getElementById('mlListPrice').value = '';
+            document.getElementById('mlCOGS').value = '';
+            document.getElementById('mlMargin').value = '';
+        }
+
+        async function processQuery() {
+            const query = document.getElementById('userQuery').value.trim();
+            
+            if (!query) {
+                alert('Please enter a query first.');
+                return;
+            }
+
+            // Show loading state
+            showLoading();
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/query`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: query
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                displayQueryResults(data);
+
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Failed to process query. Please check if the AI system is running.');
+            }
+        }
+
+        async function predictML() {
+            // Collect ML input values
+            const mlData = {
+                Item: document.getElementById('mlProduct').value || 'Product_A',
+                Customer: document.getElementById('mlCustomer').value,
+                Week_Type: document.getElementById('mlWeekType').value,
+                Promo_Type: document.getElementById('mlPromoType').value,
+                Merch: document.getElementById('mlMerch').value,
+                Base_Price: parseFloat(document.getElementById('mlBasePrice').value) || 3.99,
+                Actual_Price: parseFloat(document.getElementById('mlActualPrice').value) || 2.99,
+                List_Price: parseFloat(document.getElementById('mlListPrice').value) || 3.49,
+                COGS_Unit: parseFloat(document.getElementById('mlCOGS').value) || 1.75,
+                'Retailer_Margin_%': (parseFloat(document.getElementById('mlMargin').value) || 25) / 100
+            };
+
+            // Validate required fields
+            if (!mlData.Customer || !mlData.Week_Type || !mlData.Promo_Type || !mlData.Merch) {
+                alert('Please fill in all dropdown fields.');
+                return;
+            }
+
+            if (mlData.Base_Price <= 0 || mlData.Actual_Price <= 0) {
+                alert('Please enter valid prices greater than 0.');
+                return;
+            }
+
+            // Show loading for ML prediction
+            showMLLoading();
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/predict`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        scenario: mlData
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                displayMLResults(data, mlData);
+
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Failed to get ML prediction. Please check if the prediction service is running.');
+            }
+        }
+
+        function showLoading() {
+            const resultsSection = document.getElementById('resultsSection');
+            resultsSection.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <h3>🤖 AI is analyzing your query...</h3>
+                    <p>Processing natural language, extracting entities, and generating solution plan.</p>
+                </div>
+            `;
+            resultsSection.classList.add('show');
+        }
+
+        function showMLLoading() {
+            const resultsSection = document.getElementById('resultsSection');
+            resultsSection.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <h3>🤖 ML Model is predicting...</h3>
+                    <p>Running XGBoost model to predict Units, Base_Units, and Lift.</p>
+                </div>
+            `;
+            resultsSection.classList.add('show');
+        }
+
+        function showError(message) {
+            const resultsSection = document.getElementById('resultsSection');
+            resultsSection.innerHTML = `
+                <div class="result-card error">
+                    <div class="result-header">
+                        <div class="result-title">❌ Error</div>
+                    </div>
+                    <div class="result-content">${message}</div>
+                </div>
+            `;
+            resultsSection.classList.add('show');
+        }
+
+        function displayQueryResults(data) {
+            const resultsSection = document.getElementById('resultsSection');
+            
+            if (!data.success) {
+                showError('Query processing failed. Please try again.');
+                return;
+            }
+
+            const result = data.result;
+            const interpretation = result.interpretation;
+            const solutionPlan = result.solution_plan;
+            
+            resultsSection.innerHTML = `
+                <div class="result-card">
+                    <div class="result-header">
+                        <div class="result-title">🎯 Query Interpretation</div>
+                        <div class="confidence-badge">
+                            ${Math.round(interpretation.confidence * 100)}% Confidence
+                        </div>
+                    </div>
+                    <div class="result-content">
+                        <p><strong>Intent:</strong> ${interpretation.primary_intent}</p>
+                        <p><strong>Business Objective:</strong> ${interpretation.business_objective}</p>
+                        <p><strong>Entities Found:</strong></p>
+                        <pre style="background: #f1f3f4; padding: 10px; border-radius: 5px; font-size: 0.9em; overflow-x: auto;">${JSON.stringify(interpretation.entities_found, null, 2)}</pre>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-header">
+                        <div class="result-title">📋 Proposed Solution Plan</div>
+                    </div>
+                    <div class="result-content">
+                        <p><strong>Approach:</strong> ${solutionPlan.approach}</p>
+                        <p><strong>Steps:</strong></p>
+                        <ol>
+                            ${solutionPlan.steps.map(step => `<li>${step}</li>`).join('')}
+                        </ol>
+                        <p><strong>Expected Outputs:</strong></p>
+                        <ul>
+                            ${solutionPlan.expected_outputs.map(output => `<li>${output}</li>`).join('')}
+                        </ul>
+                        <p><strong>Complexity:</strong> ${solutionPlan.estimated_complexity}</p>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-header">
+                        <div class="result-title">🤝 Confirmation Required</div>
+                    </div>
+                    <div class="result-content">
+                        <div style="white-space: pre-line; line-height: 1.6;">${result.confirmation_request}</div>
+                        <div style="margin-top: 20px;">
+                            <button class="btn btn-primary" onclick="confirmPlan()">✅ Proceed with Plan</button>
+                            <button class="btn btn-secondary" onclick="modifyPlan()">✏️ Modify Plan</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            resultsSection.classList.add('show');
+        }
+
+        function displayMLResults(data, inputData) {
+            const resultsSection = document.getElementById('resultsSection');
+            
+            if (!data.success) {
+                showError('ML prediction failed. Please try again.');
+                return;
+            }
+
+            const prediction = data.result;
+            const discount = ((inputData.Base_Price - inputData.Actual_Price) / inputData.Base_Price * 100).toFixed(1);
+            
+            resultsSection.innerHTML = `
+                <div class="result-card">
+                    <div class="result-header">
+                        <div class="result-title">📊 Input Parameters</div>
+                    </div>
+                    <div class="result-content">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                            <p><strong>Product:</strong> ${inputData.Item}</p>
+                            <p><strong>Customer:</strong> ${inputData.Customer}</p>
+                            <p><strong>Week Type:</strong> ${inputData.Week_Type}</p>
+                            <p><strong>Promo Type:</strong> ${inputData.Promo_Type}</p>
+                            <p><strong>Merchandising:</strong> ${inputData.Merch}</p>
+                            <p><strong>Discount:</strong> ${discount}%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-card" style="border-left-color: #1976d2;">
+                    <div class="result-header">
+                        <div class="result-title">🎯 ML Model Predictions</div>
+                        <div class="confidence-badge" style="background: #1976d2;">
+                            ML Powered
+                        </div>
+                    </div>
+                    <div class="result-content">
+                        <div style
